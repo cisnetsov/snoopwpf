@@ -3,9 +3,11 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+using System;
 using System.Windows.Media;
 using System.Windows;
 using System.Collections.Generic;
+using System.Windows.Threading;
 
 namespace Snoop
 {
@@ -31,6 +33,8 @@ namespace Snoop
 			get { return this.application.Resources; }
 		}
 
+
+
 		protected override void Reload(List<VisualTreeItem> toBeRemoved)
 		{
 			// having the call to base.Reload here ... puts the application resources at the very top of the tree view
@@ -41,23 +45,24 @@ namespace Snoop
 			// however, you are still able to ctrl-shift mouse over the visuals in the visible window.
 			// when you do this, snoop reloads the visual tree with the visible window as the root (versus the application).
 
-			if (this.application.MainWindow != null)
-			{
-				bool foundMainWindow = false;
-				foreach (VisualTreeItem item in toBeRemoved)
-				{
-					if (item.Target == this.application.MainWindow)
-					{
-						toBeRemoved.Remove(item);
-						item.Reload();
-						foundMainWindow = true;
-						break;
-					}
-				}
+            // Donald
+            if (this.application.MainWindow != null && this.application.Dispatcher == Dispatcher.CurrentDispatcher)
+            {
+                bool foundMainWindow = false;
+                foreach (VisualTreeItem item in toBeRemoved)
+                {
+                    if (item.Target == this.application.MainWindow)
+                    {
+                        toBeRemoved.Remove(item);
+                        item.Reload();
+                        foundMainWindow = true;
+                        break;
+                    }
+                }
 
-				if (!foundMainWindow)
-					this.Children.Add(VisualTreeItem.Construct(this.application.MainWindow, this));
-			}
+                if (!foundMainWindow)
+                    this.Children.Add(VisualTreeItem.Construct(this.application.MainWindow, this));
+            }
 		}
 
 

@@ -429,7 +429,7 @@ namespace Snoop
 					catch (Exception ex)
 					{
 						string msg = String.Format("Error reading user filters from settings. Using defaults.\r\n\r\n{0}", ex.Message);
-						MessageBox.Show(msg, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+						//MessageBox.Show(msg, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
 						ret.Clear();
 						ret.AddRange(_defaultFilterSets);
 					}
